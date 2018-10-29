@@ -176,14 +176,16 @@ def setup(hass, config):
             if override_measurement:
                 measurement = override_measurement
             else:
-                measurement = state.attributes.get('unit_of_measurement')
-                if measurement in (None, ''):
-                    if default_measurement:
-                        measurement = default_measurement
+                measurement = state.attributes.get('device_class')
+                if not measurement:
+                    measurement = state.attributes.get('unit_of_measurement')
+                    if measurement in (None, ''):
+                        if default_measurement:
+                            measurement = default_measurement
+                        else:
+                            measurement = state.entity_id
                     else:
-                        measurement = state.entity_id
-                else:
-                    include_uom = False
+                        include_uom = False
 
         json = {
             'measurement': measurement,
